@@ -269,7 +269,7 @@ impl<BYTES> Face<BYTES> {
         CharMap::new(charmap)
     }
 
-    pub fn set_charmap(&self, charmap: CharMap) -> FtResult<()> {
+    pub fn set_charmap(&self, charmap: &CharMap) -> FtResult<()> {
         let err = unsafe { ffi::FT_Set_Charmap(self.raw, charmap.raw()) };
         if err == ffi::FT_Err_Ok {
             Ok(())
