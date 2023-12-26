@@ -214,12 +214,13 @@ impl<BYTES> Face<BYTES> {
         }
     }
 
-    pub fn get_char_index(&self, charcode: usize) -> FtResult<NonZeroU32> {
+    pub fn get_char_index(&self, charcode: usize) -> Option<u32> {
         let res = unsafe { ffi::FT_Get_Char_Index(self.raw, charcode as ffi::FT_ULong) };
-
-        // Per freetype.h, 0 means 'undefined character code' (in #return) and 'missing glyph' (in notes)
-        // TODO: Should this be Error::InvalidCharacterCode instead?
-        NonZeroU32::new(res).ok_or(crate::Error::InvalidGlyphIndex)
+        if res == 0 {
+            None
+        } else {
+            Some(res)
+        }
     }
 
     pub fn get_name_index(&self, glyph_name: &str) -> Option<u32> {
